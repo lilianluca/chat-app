@@ -6,3 +6,7 @@ services:
       - ../server:/app
     ports:
       - "8000:8000"
+
+  db:
+    ports:
+      - "5432:5432"

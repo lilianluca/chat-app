@@ -11,11 +11,16 @@ env = environ.Env(
     DEBUG=(bool, False),
     ALLOWED_HOSTS=(list, ["localhost", "127.0.0.1", "[::1]"]),
     REDIS_URL=(str, "redis://localhost:6379/0"),
+    POSTGRES_USER=(str, "user"),
+    POSTGRES_PASSWORD=(str, "password"),
+    POSTGRES_DB=(str, "database"),
+    POSTGRES_HOST=(str, "localhost"),
 )
 
 SECRET_KEY = env("SECRET_KEY")
 DEBUG = env("DEBUG")
 ALLOWED_HOSTS = env("ALLOWED_HOSTS")
+
 REDIS_URL = env("REDIS_URL")
 
 
@@ -32,6 +37,8 @@ INSTALLED_APPS = [
     # Third-party apps
     "rest_framework",
     # Local apps
+    "chat",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -73,7 +80,15 @@ CHANNEL_LAYERS = {
 }
 
 
-DATABASES = {}
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": env("POSTGRES_DB"),
+        "USER": env("POSTGRES_USER"),
+        "PASSWORD": env("POSTGRES_PASSWORD"),
+        "HOST": env("POSTGRES_HOST"),
+    }
+}
 
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -102,3 +117,5 @@ STATIC_URL = "static/"
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+AUTH_USER_MODEL = "users.User"

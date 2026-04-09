@@ -4,5 +4,8 @@ services:
       target: production
     restart: always
 
+  db:
+    restart: always
+
   redis:
     restart: always
