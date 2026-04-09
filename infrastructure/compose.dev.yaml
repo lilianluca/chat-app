@@ -1,0 +1,8 @@
+services:
+  web:
+    build:
+      target: development
+    volumes:
+      - ../server:/app
+    ports:
+      - "8000:8000"

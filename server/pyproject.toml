@@ -1,0 +1,62 @@
+[project]
+name = "server"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "channels>=4.3.2",
+    "channels-redis>=4.3.0",
+    "daphne>=4.2.1",
+    "django~=5.2.0",
+    "django-environ>=0.13.0",
+    "djangorestframework>=3.17.1",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.10",
+]
+
+
+[tool.ruff]
+target-version = "py313"
+
+line-length = 88
+
+exclude = [
+    ".venv",
+    "__pycache__",
+    "*/migrations/*.py",
+    "*/__init__.py",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # Pyflakes (unused imports, undefined variables, ...)
+    "I",   # isort (automatically sorts imports)
+    "B",   # flake8-bugbear (reveals hidden logical errors and pitfalls in Python)
+    "C4",  # flake8-comprehensions ( encourages writing more Pythonic code using comprehensions)
+    "UP",  # pyupgrade (automatically converts older code to the new 3.13 syntax)
+    "DJ",  # flake8-django (provides Django-specific linting rules)
+    "SIM", # flake8-simplify (helps to simplify code and improve readability)
+    "D",   # pydocstyle (enforces docstring conventions)
+]
+
+ignore = [
+    "E501", # line too long
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.isort]
+known-first-party = ["core", "chat", "users"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"

@@ -1,0 +1,8 @@
+services:
+  web:
+    build:
+      target: production
+    restart: always
+
+  redis:
+    restart: always
