@@ -71,7 +71,7 @@ CHANNEL_LAYERS = {
         },
     }
 }
-
+ 
 
 DATABASES = {}
 
