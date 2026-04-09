@@ -1,0 +1,19 @@
+name: chat-app
+
+services:
+  web:
+    image: django-chat-app
+    container_name: django-chat-app
+    build:
+      context: ../server
+      dockerfile: Dockerfile
+    env_file:
+      - ../server/.env
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    expose:
+      - "6379"

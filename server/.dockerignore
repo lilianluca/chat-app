@@ -1,0 +1,14 @@
+# Git
+.gitignore
+
+# Python & Django
+__pycache__/
+
+# Environments
+.venv/
+
+# Secrets
+.env
+
+# Os & Editor
+.vscode/
