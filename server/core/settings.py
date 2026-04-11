@@ -1,5 +1,6 @@
 """Django settings for the chat application."""
 
+from datetime import timedelta
 from pathlib import Path
 
 import environ
@@ -93,6 +94,18 @@ DATABASES = {
 
 REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "core.utils.custom_exception_handler",
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "SIGNING_KEY": SECRET_KEY,
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "user_id",
+    "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
 

@@ -37,7 +37,7 @@ def custom_exception_handler(exc, context):
             else:
                 # If there are field-specific errors, we can include those in the details.
                 custom_data["error"]["message"] = "Validation error."
-                custom_data["error"]["code"] = "VALIDATION_ERROR"
+                custom_data["error"]["code"] = "validation_error"
                 custom_data["error"]["details"] = response.data
 
         # If the response data is a list (e.g., for non-field errors), we can include that in the details as well.
