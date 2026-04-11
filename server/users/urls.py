@@ -6,5 +6,5 @@ from users import apis
 
 urlpatterns = [
     path("register/", apis.register_user, name="register_user"),
-    path("my-profile/", apis.my_profile, name="my_profile"),
+    path("me/", apis.get_current_user_info, name="my_profile"),
 ]

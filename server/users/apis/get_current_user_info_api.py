@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 
 class OutputSerializer(serializers.Serializer):
-    """Serializer for the output of the my_profile endpoint."""
+    """Serializer for the output of the get_current_user_info endpoint."""
 
     id = serializers.IntegerField()
     email = serializers.EmailField()
@@ -18,7 +18,7 @@ class OutputSerializer(serializers.Serializer):
 
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
-def my_profile(request: Request) -> Response:
+def get_current_user_info(request: Request) -> Response:
     """Retrieve the profile of the currently authenticated user."""
     output_serializer = OutputSerializer(request.user)
     return Response(output_serializer.data)
