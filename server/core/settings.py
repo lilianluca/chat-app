@@ -91,6 +91,11 @@ DATABASES = {
 }
 
 
+REST_FRAMEWORK = {
+    "EXCEPTION_HANDLER": "core.utils.custom_exception_handler",
+}
+
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",

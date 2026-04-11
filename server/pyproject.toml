@@ -15,9 +15,7 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = [
-    "ruff>=0.15.10",
-]
+dev = ["ruff>=0.15.10"]
 
 
 [tool.ruff]
@@ -25,12 +23,7 @@ target-version = "py313"
 
 line-length = 88
 
-exclude = [
-    ".venv",
-    "__pycache__",
-    "*/migrations/*.py",
-    "*/__init__.py",
-]
+exclude = [".venv", "__pycache__", "*/migrations/*.py", "*/__init__.py"]
 
 [tool.ruff.lint]
 select = [
@@ -48,6 +41,12 @@ select = [
 
 ignore = [
     "E501", # line too long
+    "D106", # missing docstring in public nested class
+]
+
+[tool.ruff.lint.per-file-ignores]
+"**/exceptions/*.py" = [
+    "D100", # Ignore missing docstring in public module
 ]
 
 [tool.ruff.lint.pydocstyle]

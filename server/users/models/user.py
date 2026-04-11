@@ -17,10 +17,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     joined_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    objects = CustomUserManager()
+    objects: CustomUserManager = CustomUserManager()
 
-    USERNAME_FIELD = "email"  # Email is the unique identifier for authentication
-    REQUIRED_FIELDS = []  # No additional required fields besides email and password
+    # Email is the unique identifier for authentication
+    USERNAME_FIELD = "email"
+
+    # No additional required fields besides email and password
+    REQUIRED_FIELDS = []
 
     def __str__(self):
         """Return the email of the user as its string representation."""
