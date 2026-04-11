@@ -14,7 +14,7 @@ def map_integrity_errors(exception_mapping: dict):
 
     Usage:
         error_mapper = {
-            "users_user_email_key": UserAlreadyExists,
+            "users_user_email_key": user_already_exists,
         }
     """
     try:

@@ -2,8 +2,9 @@
 
 from django.urls import path
 
-from users.apis import register_user
+from users import apis
 
 urlpatterns = [
-    path("register/", register_user, name="register_user"),
+    path("register/", apis.register_user, name="register_user"),
+    path("my-profile/", apis.my_profile, name="my_profile"),
 ]
