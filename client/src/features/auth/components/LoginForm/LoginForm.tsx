@@ -1,34 +1,43 @@
-import { useState } from 'react';
-import { useAuth } from '@/features/auth/hooks';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { loginSchema, type LoginFormData } from '@/features/auth/schemas';
+import { useLoginMutation } from '@/features/auth/hooks';
+import { Input } from '@/components/Input';
+import { Button } from '@/components';
 
 export const LoginForm = () => {
-  const { login } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const loginMutation = useLoginMutation();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await login({ email, password });
-      // Redirect to dashboard (if using React Router)
-      // navigate('/dashboard');
-    } catch (_err) {
-      setError('Invalid email or password');
-    }
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+  });
+
+  function onSubmit(data: LoginFormData) {
+    loginMutation.mutate(data);
+  }
 
   return (
-    <form onSubmit={handleSubmit}>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <input value={email} onChange={(e) => setEmail(e.target.value)} placeholder='Email' />
-      <input
+    <form onSubmit={handleSubmit(onSubmit)} className='space-y-4'>
+      <Input label='Email' type='email' {...register('email')} error={errors.email?.message} />
+      <Input
+        label='Password'
         type='password'
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder='Password'
+        {...register('password')}
+        error={errors.password?.message}
       />
-      <button type='submit'>Log In</button>
+
+      <Button
+        type='submit'
+        variant='primary'
+        isLoading={loginMutation.isPending}
+        className='w-full'
+      >
+        {loginMutation.isPending ? 'Logging in...' : 'Login'}
+      </Button>
     </form>
   );
 };
