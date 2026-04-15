@@ -1,3 +1,1 @@
-from django.contrib import admin
-
-# Register your models here.
+"""Admin interface for managing users and permissions."""
