@@ -10,8 +10,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     """Custom user model that uses email as the unique identifier for authentication."""
 
     email = models.EmailField(unique=True)
-    first_name = models.CharField(max_length=50, blank=True)
-    last_name = models.CharField(max_length=50, blank=True)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     joined_at = models.DateTimeField(auto_now_add=True)

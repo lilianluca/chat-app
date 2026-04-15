@@ -1,8 +1,8 @@
-"""URL configuration for the auth app, defining endpoints related to user authentication and logout."""
+"""URL configuration for the authentication app, defining endpoints related to user authentication and logout."""
 
 from django.urls import path
 
-from auth import apis
+from authentication import apis
 
 urlpatterns = [
     path(

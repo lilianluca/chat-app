@@ -40,8 +40,9 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt",
     "rest_framework_simplejwt.token_blacklist",
     # Local apps
-    "chat",
+    "authentication",
     "users",
+    "chat",
 ]
 
 MIDDLEWARE = [
@@ -96,7 +97,7 @@ DATABASES = {
 
 REST_FRAMEWORK = {
     "EXCEPTION_HANDLER": "core.utils.custom_exception_handler",
-    "DEFAULT_AUTHENTICATION_CLASSES": ("auth.utils.CookieJWTAuthentication",),
+    "DEFAULT_AUTHENTICATION_CLASSES": ("authentication.utils.CookieJWTAuthentication",),
     "DEFAULT_RENDERER_CLASSES": (
         "djangorestframework_camel_case.render.CamelCaseJSONRenderer",
         "djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer",
