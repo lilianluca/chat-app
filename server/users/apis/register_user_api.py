@@ -14,6 +14,8 @@ class InputSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(min_length=8)
     confirm_password = serializers.CharField()
+    first_name = serializers.CharField(max_length=50)
+    last_name = serializers.CharField(max_length=50)
 
     def validate_password(self, value):
         """Validate that the password meets complexity requirements."""
@@ -48,5 +50,7 @@ def register_user(request: Request) -> Response:
     create_user(
         email=input_serializer.validated_data["email"],
         password=input_serializer.validated_data["password"],
+        first_name=input_serializer.validated_data["first_name"],
+        last_name=input_serializer.validated_data["last_name"],
     )
     return Response(status=status.HTTP_201_CREATED)
