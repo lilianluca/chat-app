@@ -4,6 +4,13 @@ services:
       target: production
     restart: always
 
+  client:
+    build:
+      target: production
+    restart: always
+    ports:
+      - "80:80"
+
   db:
     restart: always
 

@@ -7,6 +7,18 @@ services:
     ports:
       - "8000:8000"
 
+  client:
+    build:
+      target: development
+    volumes:
+      - ../client:/app
+      - client_node_modules:/app/node_modules
+    ports:
+      - "5173:5173"
+
   db:
     ports:
       - "5432:5432"
+
+volumes:
+  client_node_modules:

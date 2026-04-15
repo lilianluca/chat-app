@@ -1,0 +1,13 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Semantic UI Colors */
+  --color-brand: #355070;
+  --color-destructive: #e56b6f;
+
+  /* Twine palette */
+  --color-twilight: #6d597a;
+  --color-mauve: #b56576;
+  --color-peach: #e88c7d;
+  --color-apricot: #eaac8b;
+}

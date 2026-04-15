@@ -1,11 +1,20 @@
 name: Lint
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "server/**"
+      - ".github/workflows/lint-server.yaml"
   pull_request:
     branches: [main]
+    paths:
+      - "server/**"
+      - ".github/workflows/lint-server.yaml"
 
 jobs:
   lint:
+    name: Lint Server
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -26,7 +35,8 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
-      - name: Run Ruff
-        run: |
-          uv run ruff check .
-          uv run ruff format --check .
+      - name: Check Formatting
+        run: uv run ruff check .
+
+      - name: Check Linting
+        run: uv run ruff check .

@@ -15,6 +15,13 @@ services:
       redis:
         condition: service_started
 
+  client:
+    image: react-chat-app
+    container_name: react-chat-app
+    build:
+      context: ../client
+      dockerfile: Dockerfile
+
   db:
     image: postgres:18.3-alpine
     container_name: postgres
