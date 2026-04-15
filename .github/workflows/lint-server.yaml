@@ -1,8 +1,16 @@
 name: Lint
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "server/**"
+      - ".github/workflows/lint-server.yaml"
   pull_request:
     branches: [main]
+    paths:
+      - "server/**"
+      - ".github/workflows/lint-server.yaml"
 
 jobs:
   lint:
