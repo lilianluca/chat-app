@@ -1,16 +1,10 @@
 import { Navigate, Outlet, useLocation } from 'react-router';
 import { useMe } from '@/features/users/hooks';
 import { Loader } from 'lucide-react';
-import { useEffect } from 'react';
 
 export const ProtectedRoute = () => {
   const { data: user, isLoading } = useMe();
   const location = useLocation();
-
-  useEffect(
-    () => console.log('ProtectedRoute: user data changed', { user, isLoading }),
-    [user, isLoading],
-  );
 
   if (isLoading) {
     return (

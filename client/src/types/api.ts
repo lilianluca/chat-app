@@ -9,7 +9,7 @@ type ApiErrorDetails = Record<string, string[]>;
 /**
  * The inner body of the error response.
  */
-interface ApiErrorBody {
+export interface ApiErrorBody {
   code: string;
   message: string;
   details?: ApiErrorDetails; // Optional because not all errors are validation errors
@@ -18,7 +18,7 @@ interface ApiErrorBody {
 /**
  * The top-level error response from the backend.
  */
-interface ApiErrorResponse {
+export interface ApiErrorResponse {
   error: ApiErrorBody;
 }
 

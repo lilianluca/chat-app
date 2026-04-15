@@ -1,4 +1,4 @@
-import { forwardRef, type InputHTMLAttributes } from 'react';
+import { forwardRef, useId, type InputHTMLAttributes } from 'react';
 import { type VariantProps } from 'class-variance-authority';
 import { cn } from '@/utils';
 import { inputVariants } from './inputVariants';
@@ -12,16 +12,21 @@ export interface InputProps
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className, variant, inputSize, label, error, type = 'text', ...props }, ref) => {
+    const generatedId = useId();
+
+    const id = props.id || generatedId; // Use provided id or fallback to generated one
+
     return (
       <div className='flex w-full flex-col gap-1.5'>
         {label && (
-          <label htmlFor={props.id || props.name} className='text-sm font-medium text-slate-700'>
+          <label htmlFor={id} className='text-sm font-medium text-slate-700'>
             {label}
           </label>
         )}
 
         <input
           type={type}
+          id={id}
           ref={ref}
           className={cn(
             inputVariants({ variant, inputSize }),

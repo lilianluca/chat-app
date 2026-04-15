@@ -1,10 +1,13 @@
 """API endpoint for user registration."""
 
+from django.contrib.auth import password_validation
+from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework import serializers, status
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
 
+from users.models import User
 from users.services import create_user
 
 
@@ -12,33 +15,41 @@ class InputSerializer(serializers.Serializer):
     """Serializer for user registration input."""
 
     email = serializers.EmailField()
-    password = serializers.CharField(min_length=8)
+    password = serializers.CharField()
     confirm_password = serializers.CharField()
     first_name = serializers.CharField(max_length=50)
     last_name = serializers.CharField(max_length=50)
 
-    def validate_password(self, value):
-        """Validate that the password meets complexity requirements."""
-        if not any(char.isdigit() for char in value):
-            raise serializers.ValidationError(
-                "Password must contain at least one digit."
-            )
-        if not any(char.isalpha() for char in value):
-            raise serializers.ValidationError(
-                "Password must contain at least one letter."
-            )
-        if not any(char in "!@#$%^&*,.?/" for char in value):
-            raise serializers.ValidationError(
-                "Password must contain at least one special character."
-            )
-        return value
-
     def validate(self, data):
-        """Validate that password and confirm_password match."""
-        if data["password"] != data["confirm_password"]:
-            raise serializers.ValidationError(
-                {"confirm_password": "Password and confirm password do not match."}
+        """Run all object-level validation, including password checks."""
+        errors = {}
+
+        # Check if passwords match
+        if data.get("password") != data.get("confirm_password"):
+            errors["confirm_password"] = ["passwords_do_not_match"]
+
+        # Check Django password validators
+        if data.get("password"):
+            # Create an in-memory, unsaved User object just for the validator
+            dummy_user = User(
+                email=data.get("email", ""),
+                first_name=data.get("first_name", ""),
+                last_name=data.get("last_name", ""),
             )
+
+            try:
+                # Pass the dummy_user so the SimilarityValidator can do its job
+                password_validation.validate_password(
+                    password=data.get("password"), user=dummy_user
+                )
+            except DjangoValidationError as e:
+                # Extract the codes and attach them to the password field
+                errors["password"] = [error.code for error in e.error_list]
+
+        # If we caught ANY errors from the steps above, raise them all at once
+        if errors:
+            raise serializers.ValidationError(errors)
+
         return data
 
 

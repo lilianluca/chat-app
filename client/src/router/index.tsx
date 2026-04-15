@@ -1,6 +1,6 @@
 import { createBrowserRouter } from 'react-router';
 import { MainLayout } from '@/layouts/MainLayout';
-import { LoginPage, MyProfilePage } from '@/pages';
+import { MyProfilePage, LoginPage, RegisterPage } from '@/pages';
 import { AuthLayout } from '@/layouts';
 import { ProtectedRoute } from '@/components';
 
@@ -40,7 +40,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'register',
-        element: <div className='text-2xl font-bold bg-blue-200'>Register</div>,
+        element: <RegisterPage />,
       },
     ],
   },
