@@ -1,30 +1,20 @@
-import { createBrowserRouter } from 'react-router';
-import { MainLayout } from '@/layouts/MainLayout';
-import { MyProfilePage, LoginPage, RegisterPage } from '@/pages';
-import { AuthLayout } from '@/layouts';
+import { createBrowserRouter, Navigate } from 'react-router';
+import { LoginPage, RegisterPage } from '@/pages';
+import { AuthLayout, ChatLayout } from '@/layouts';
 import { ProtectedRoute } from '@/components';
 
 export const router = createBrowserRouter([
+  // Protected routes
   {
-    path: '/',
-    element: <MainLayout />,
+    element: <ProtectedRoute />,
     children: [
-      // Public routes
       {
-        index: true,
-        element: <div className='text-2xl font-bold bg-green-500'>Home</div>,
-      },
-      // Protected routes
-      {
-        element: <ProtectedRoute />,
+        path: '/',
+        element: <ChatLayout />,
         children: [
           {
-            path: 'my-profile',
-            element: <MyProfilePage />,
-          },
-          {
-            path: 'settings',
-            element: <div>Settings Page</div>,
+            path: 'chats',
+            element: <div className='text-2xl font-bold h-full p-2'>Chats Page</div>,
           },
         ],
       },
@@ -43,5 +33,10 @@ export const router = createBrowserRouter([
         element: <RegisterPage />,
       },
     ],
+  },
+  // Catch-all route to redirect to /chats
+  {
+    path: '*',
+    element: <Navigate to='/chats' replace />,
   },
 ]);
