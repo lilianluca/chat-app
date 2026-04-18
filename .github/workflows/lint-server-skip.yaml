@@ -1,0 +1,16 @@
+name: Lint Server Skip
+
+on:
+  pull_request:
+    # Trigger this ONLY when the server files are NOT touched
+    paths-ignore:
+      - "server/**"
+      - ".github/workflows/lint-server.yaml"
+
+jobs:
+  lint:
+    name: Lint Server
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skip Server Linting
+        run: echo "No server changes detected. Skipping linting to save time!"
