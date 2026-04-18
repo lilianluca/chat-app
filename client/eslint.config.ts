@@ -30,11 +30,15 @@ export default defineConfig([
       'react/jsx-uses-react': 'off',
       'max-len': ['error', { code: 120, ignoreUrls: true, ignoreStrings: true }],
       semi: ['error', 'always'],
-      quotes: ['error', 'single'],
+      quotes: ['error', 'single', { avoidEscape: true }],
       'no-unused-vars': 'off',
       '@typescript-eslint/no-unused-vars': [
         'error',
         { argsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
+      ],
+      'react-refresh/only-export-components': [
+        'error',
+        { allowConstantExport: true, allowFunctions: true },
       ],
     },
   },

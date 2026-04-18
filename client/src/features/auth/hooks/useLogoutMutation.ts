@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
 
 async function logout() {
+  await new Promise((resolve) => setTimeout(resolve, 5000));
   await apiClient.post('/auth/logout/');
 }
 
