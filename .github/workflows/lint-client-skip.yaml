@@ -5,7 +5,7 @@ on:
     # Trigger this ONLY when the client files are NOT touched
     paths-ignore:
       - "client/**"
-      - ".github/workflows/lint-client.yaml"
+      - ".github/workflows/**"
 
 jobs:
   lint:
