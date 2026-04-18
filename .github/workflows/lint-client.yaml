@@ -2,15 +2,9 @@ name: Lint
 
 on:
   push:
-    branches: [main]
-    paths:
-      - "client/**"
-      - ".github/workflows/lint-client.yaml"
+    branches: [ main ]
   pull_request:
-    branches: [main]
-    paths:
-      - "client/**"
-      - ".github/workflows/lint-client.yaml"
+    branches: [ main ]
 
 jobs:
   lint:
