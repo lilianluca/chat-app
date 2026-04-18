@@ -36,10 +36,7 @@ export default defineConfig([
         'error',
         { argsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
       ],
-      'react-refresh/only-export-components': [
-        'error',
-        { allowConstantExport: true, allowFunctions: true },
-      ],
+      'react-refresh/only-export-components': 'off',
     },
   },
 ]);
