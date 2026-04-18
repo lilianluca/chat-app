@@ -3,7 +3,12 @@
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework import serializers, status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import (
+    api_view,
+    authentication_classes,
+    permission_classes,
+)
+from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -20,27 +25,27 @@ class InputSerializer(serializers.Serializer):
     first_name = serializers.CharField(max_length=50)
     last_name = serializers.CharField(max_length=50)
 
-    def validate(self, data):
+    def validate(self, attrs):
         """Run all object-level validation, including password checks."""
         errors = {}
 
         # Check if passwords match
-        if data.get("password") != data.get("confirm_password"):
+        if attrs.get("password") != attrs.get("confirm_password"):
             errors["confirm_password"] = ["passwords_do_not_match"]
 
         # Check Django password validators
-        if data.get("password"):
+        if attrs.get("password"):
             # Create an in-memory, unsaved User object just for the validator
             dummy_user = User(
-                email=data.get("email", ""),
-                first_name=data.get("first_name", ""),
-                last_name=data.get("last_name", ""),
+                email=attrs.get("email", ""),
+                first_name=attrs.get("first_name", ""),
+                last_name=attrs.get("last_name", ""),
             )
 
             try:
                 # Pass the dummy_user so the SimilarityValidator can do its job
                 password_validation.validate_password(
-                    password=data.get("password"), user=dummy_user
+                    password=attrs.get("password"), user=dummy_user
                 )
             except DjangoValidationError as e:
                 # Extract the codes and attach them to the password field
@@ -50,10 +55,12 @@ class InputSerializer(serializers.Serializer):
         if errors:
             raise serializers.ValidationError(errors)
 
-        return data
+        return attrs
 
 
 @api_view(["POST"])
+@authentication_classes([])
+@permission_classes([AllowAny])
 def register_user(request: Request) -> Response:
     """Register a new user."""
     input_serializer = InputSerializer(data=request.data)
