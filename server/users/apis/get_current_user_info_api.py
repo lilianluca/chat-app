@@ -14,6 +14,9 @@ class OutputSerializer(serializers.Serializer):
     email = serializers.EmailField()
     first_name = serializers.CharField()
     last_name = serializers.CharField()
+    avatar = serializers.ImageField()
+    bio = serializers.CharField()
+    status_emoji = serializers.CharField()
 
 
 @api_view(["GET"])

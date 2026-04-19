@@ -12,9 +12,12 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/in
 import { Link, Outlet } from 'react-router';
 import { useLogoutMutation } from '@/features/auth/hooks';
 import { ChatCardList } from '@/features/chats/components';
+import { useState } from 'react';
+import { ProfileSheet } from '@/features/users/components';
 
 export const ChatLayout = () => {
   const logoutMutation = useLogoutMutation();
+  const [isProfileSheetOpen, setProfileSheetOpen] = useState(false);
 
   function handleLogout(e: Event) {
     e.preventDefault();
@@ -26,6 +29,10 @@ export const ChatLayout = () => {
     if (logoutMutation.isPending) {
       e.preventDefault();
     }
+  }
+
+  function handleOpenProfileSheet() {
+    setProfileSheetOpen(true);
   }
 
   return (
@@ -51,7 +58,7 @@ export const ChatLayout = () => {
                     <span>Chats</span>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>
+                <DropdownMenuItem onSelect={handleOpenProfileSheet}>
                   <User />
                   <span>Profile</span>
                 </DropdownMenuItem>
@@ -93,6 +100,8 @@ export const ChatLayout = () => {
       <div className='h-full flex-1 flex flex-col relative'>
         <Outlet />
       </div>
+
+      <ProfileSheet isOpen={isProfileSheetOpen} onOpenChange={setProfileSheetOpen} />
     </div>
   );
 };
