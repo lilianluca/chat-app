@@ -9,10 +9,10 @@ export const handleFormErrors = <T extends FieldValues>(
 ) => {
   const apiError = extractApiError(error);
 
-  // Handle Global Errors
+  // Handle Global Errors (e.g., 401 Unauthorized, 500 Server Error)
   if (apiError.code !== 'validation_error') {
-    // Look up the translation using the code, fallback to the backend message
-    const localizedMessage = ErrorTranslations[apiError.code] || apiError.message;
+    // Look up in the 'general' bucket, fallback to the backend message
+    const localizedMessage = ErrorTranslations.general[apiError.code] || apiError.message;
 
     setError(fallbackField as Path<T>, {
       type: 'server',
@@ -23,16 +23,22 @@ export const handleFormErrors = <T extends FieldValues>(
 
   // Handle Field-Specific Validation Errors
   if (apiError.details) {
-    Object.entries(apiError.details).forEach(([field, messages]) => {
-      // Map over the array of messages and translate each one!
-      const localizedMessages = messages.map((msgCode) => {
-        return ErrorTranslations[msgCode] || msgCode; // Fallback to raw string if no translation
-      });
+    Object.entries(apiError.details).forEach(([field, fieldErrors]) => {
+      // Safely grab the first error object in the array
+      const firstError = fieldErrors[0];
 
-      setError(field as Path<T>, {
-        type: 'server',
-        message: localizedMessages[0],
-      });
+      if (firstError) {
+        // The 3-Step Matrix Lookup
+        const localizedMessage =
+          ErrorTranslations[field]?.[firstError.code] || // 1. Field-specific (email.unique)
+          ErrorTranslations.general[firstError.code] || // 2. Generic fallback (general.unique)
+          firstError.message; // 3. Backend fallback string
+
+        setError(field as Path<T>, {
+          type: 'server',
+          message: localizedMessage,
+        });
+      }
     });
   }
 };

@@ -1,10 +1,11 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { loginSchema, type LoginFormData } from '@/features/auth/schemas';
+import { loginSchema, type LoginPayload } from '@/features/auth/schemas';
 import { useLoginMutation } from '@/features/auth/hooks';
 import { Button, Input } from '@/components';
 import { handleFormErrors } from '@/utils';
 import { useNavigate } from 'react-router';
+import { toast } from 'sonner';
 
 export const LoginForm = () => {
   const navigate = useNavigate();
@@ -15,17 +16,18 @@ export const LoginForm = () => {
     handleSubmit,
     setError,
     formState: { errors },
-  } = useForm<LoginFormData>({
+  } = useForm<LoginPayload>({
     resolver: zodResolver(loginSchema),
   });
 
-  function onSubmit(data: LoginFormData) {
+  function onSubmit(data: LoginPayload) {
     loginMutation.mutate(data, {
       onSuccess: () => {
         navigate('/');
+        toast.success('Login successful! Redirecting...');
       },
       onError: (error) => {
-        handleFormErrors<LoginFormData>(error, setError);
+        handleFormErrors<LoginPayload>(error, setError);
       },
     });
   }

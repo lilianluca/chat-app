@@ -1,17 +1,11 @@
-export interface UserResponse {
+export interface UserProfileResponse {
   id: number;
   email: string;
   firstName: string;
   lastName: string;
+  avatar: string | null;
   bio: string;
   statusEmoji: string;
-}
-
-export interface UpdateProfileResponse {
-  id: number;
-  email: string;
-  firstName: string;
-  lastName: string;
-  bio: string;
-  statusEmoji: string;
+  joinedAt: string;
+  updatedAt: string;
 }

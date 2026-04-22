@@ -1,10 +1,12 @@
 import { Button, Input } from '@/components';
 import { useForm } from 'react-hook-form';
-import { registerSchema, type RegisterFormData } from '@/features/auth/schemas';
+import { registerSchema, type RegisterPayload } from '@/features/auth/schemas';
 import { useRegisterMutation } from '@/features/auth/hooks';
 import { useNavigate } from 'react-router';
 import { handleFormErrors } from '@/utils';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from 'sonner';
+import { useEffect } from 'react';
 
 export const RegisterForm = () => {
   const navigate = useNavigate();
@@ -15,19 +17,22 @@ export const RegisterForm = () => {
     setError,
     clearErrors,
     formState: { errors },
-  } = useForm<RegisterFormData>({
+  } = useForm<RegisterPayload>({
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = (data: RegisterFormData) => {
+  useEffect(() => console.log('RegisterForm errors:', errors), [errors]);
+
+  const onSubmit = (data: RegisterPayload) => {
     clearErrors('root');
 
     registerMutation.mutate(data, {
       onSuccess: () => {
         navigate('/login');
+        toast.success('Registration successful! Please log in.');
       },
       onError: (error) => {
-        handleFormErrors<RegisterFormData>(error, setError);
+        handleFormErrors<RegisterPayload>(error, setError);
       },
     });
   };
