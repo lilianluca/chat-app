@@ -14,6 +14,7 @@ import { useLogoutMutation } from '@/features/auth/hooks';
 import { ChatCardList } from '@/features/chats/components';
 import { useState } from 'react';
 import { ProfileSheet } from '@/features/users/components';
+import { toast } from 'sonner';
 
 export const ChatLayout = () => {
   const logoutMutation = useLogoutMutation();
@@ -21,7 +22,11 @@ export const ChatLayout = () => {
 
   function handleLogout(e: Event) {
     e.preventDefault();
-    logoutMutation.mutate();
+    logoutMutation.mutate(undefined, {
+      onSuccess: () => {
+        toast.success('Logged out successfully');
+      },
+    });
   }
 
   function handleDropdownClose(e: Event) {

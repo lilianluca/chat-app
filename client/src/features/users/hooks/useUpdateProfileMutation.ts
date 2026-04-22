@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { UpdateProfileFormData } from '@/features/users/schemas';
 import { apiClient } from '@/libs';
 import { type ApiError } from '@/types';
@@ -24,7 +24,12 @@ async function updateProfile(payload: UpdateProfileFormData) {
 }
 
 export const useUpdateProfileMutation = () => {
+  const queryClient = useQueryClient();
+
   return useMutation<UserProfileResponse, ApiError, UpdateProfileFormData>({
     mutationFn: updateProfile,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
+    },
   });
 };

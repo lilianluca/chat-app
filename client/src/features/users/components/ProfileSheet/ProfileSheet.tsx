@@ -18,7 +18,7 @@ import {
   FieldGroup,
   FieldLabel,
 } from '@/components/ui/field';
-import { Save } from 'lucide-react';
+import { CalendarDays, Clock, Mail, Save } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
@@ -26,6 +26,17 @@ import { toast } from 'sonner';
 interface ProfileSheetProps {
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
+}
+
+function formatDate(dateString: string) {
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(new Date(dateString));
 }
 
 export const ProfileSheet = ({ isOpen, onOpenChange }: ProfileSheetProps) => {
@@ -71,6 +82,29 @@ export const ProfileSheet = ({ isOpen, onOpenChange }: ProfileSheetProps) => {
           <SheetTitle>Edit Profile</SheetTitle>
           <SheetDescription>Update your profile information here.</SheetDescription>
         </SheetHeader>
+
+        {user && (
+          <div className='m-4 rounded-lg bg-muted/50 p-4 space-y-3 border border-border/50'>
+            <h4 className='text-sm font-medium tracking-tight'>Account Detail</h4>
+
+            <div className='flex flex-col gap-2'>
+              <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+                <Mail className='h-4 w-4 opacity-70' />
+                <span className='truncate'>{user.email}</span>
+              </div>
+
+              <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+                <CalendarDays className='h-4 w-4 opacity-70' />
+                <span>Joined {formatDate(user.joinedAt)}</span>
+              </div>
+
+              <div className='flex items-center gap-2 text-sm text-muted-foreground'>
+                <Clock className='h-4 w-4 opacity-70' />
+                <span>Last updated {formatDate(user.updatedAt)}</span>
+              </div>
+            </div>
+          </div>
+        )}
 
         <form
           id='update-profile-form'
