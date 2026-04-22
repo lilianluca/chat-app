@@ -4,7 +4,7 @@ from django.conf import settings
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 
-class CookieTokenObtainPairView(TokenObtainPairView):
+class CookieTokenObtainPairApiView(TokenObtainPairView):
     """View to obtain JWT token pair and set them in cookies."""
 
     def post(self, request, *args, **kwargs):

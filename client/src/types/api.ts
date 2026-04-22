@@ -1,10 +1,15 @@
 import type { AxiosError } from 'axios';
 
+type FieldError = {
+  message: string;
+  code: string;
+};
+
 /**
  * Represents the field-specific validation errors.
- * Example: { "password": ["This field is required."] }
+ * Example: { "password": [{"message": "This field is required.", "code": "unique"}] }
  */
-type ApiErrorDetails = Record<string, string[]>;
+type ApiErrorDetails = Record<string, FieldError[]>;
 
 /**
  * The inner body of the error response.

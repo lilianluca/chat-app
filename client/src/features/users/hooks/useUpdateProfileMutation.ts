@@ -1,8 +1,8 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import type { UpdateProfileFormData } from '@/features/users/schemas';
 import { apiClient } from '@/libs';
 import { type ApiError } from '@/types';
-import type { UpdateProfileResponse } from '@/features/users/types';
+import type { UserProfileResponse } from '@/features/users/types';
 
 async function updateProfile(payload: UpdateProfileFormData) {
   // Create a FormData object to handle file upload
@@ -15,7 +15,7 @@ async function updateProfile(payload: UpdateProfileFormData) {
     formData.append('avatar', payload.avatar);
   }
 
-  const response = await apiClient.patch('/users/me/update/', formData, {
+  const response = await apiClient.patch('/users/me/', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
@@ -24,7 +24,12 @@ async function updateProfile(payload: UpdateProfileFormData) {
 }
 
 export const useUpdateProfileMutation = () => {
-  return useMutation<UpdateProfileResponse, ApiError, UpdateProfileFormData>({
+  const queryClient = useQueryClient();
+
+  return useMutation<UserProfileResponse, ApiError, UpdateProfileFormData>({
     mutationFn: updateProfile,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['users', 'me'] });
+    },
   });
 };

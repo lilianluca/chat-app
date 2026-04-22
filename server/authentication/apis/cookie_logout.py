@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
-class CookieLogoutView(APIView):
+class CookieLogoutApiView(APIView):
     """API endpoint to handle user logout by clearing JWT tokens from cookies."""
 
     def post(self, request):
