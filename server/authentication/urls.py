@@ -7,13 +7,13 @@ from authentication import apis
 urlpatterns = [
     path(
         "token/",
-        apis.CookieTokenObtainPairView.as_view(),
+        apis.CookieTokenObtainPairApiView.as_view(),
         name="token_obtain_pair",
     ),
     path(
         "token/refresh/",
-        apis.CookieTokenRefreshView.as_view(),
+        apis.CookieTokenRefreshApiView.as_view(),
         name="token_refresh",
     ),
-    path("logout/", apis.CookieLogoutView.as_view(), name="logout"),
+    path("logout/", apis.CookieLogoutApiView.as_view(), name="logout"),
 ]

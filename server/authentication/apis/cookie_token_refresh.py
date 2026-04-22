@@ -4,7 +4,7 @@ from django.conf import settings
 from rest_framework_simplejwt.views import TokenRefreshView
 
 
-class CookieTokenRefreshView(TokenRefreshView):
+class CookieTokenRefreshApiView(TokenRefreshView):
     """View to refresh JWT access token using refresh token from cookies."""
 
     def post(self, request, *args, **kwargs):
