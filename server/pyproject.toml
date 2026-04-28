@@ -52,6 +52,11 @@ ignore = [
 "**/exceptions/*.py" = [
     "D100", # Ignore missing docstring in public module
 ]
+"**/models/*.py" = [
+    "D100", # Ignore missing docstring in public module
+    "D101", # Ignore missing docstring in public class
+    "D105", # Ignore missing docstring in magic methods
+]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"

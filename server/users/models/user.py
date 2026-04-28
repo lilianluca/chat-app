@@ -1,5 +1,3 @@
-"""Custom user model."""
-
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 
@@ -12,8 +10,6 @@ def get_user_directory_path(instance, filename):
 
 
 class User(AbstractBaseUser, PermissionsMixin):
-    """Custom user model that uses email as the unique identifier for authentication."""
-
     email = models.EmailField(unique=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
@@ -34,5 +30,4 @@ class User(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = ["first_name", "last_name"]
 
     def __str__(self):
-        """Return the email of the user as its string representation."""
         return self.email
