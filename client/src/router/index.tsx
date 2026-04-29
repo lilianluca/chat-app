@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from 'react-router';
 import { LoginPage, RegisterPage } from '@/pages';
 import { AuthLayout, ChatLayout } from '@/layouts';
 import { ProtectedRoute } from '@/components';
+import { ChatRoom } from '@/features/chats/components';
 
 export const router = createBrowserRouter([
   // Protected routes
@@ -15,6 +16,10 @@ export const router = createBrowserRouter([
           {
             path: 'chats',
             element: <div className='text-2xl font-bold h-full p-2'>Chats Page</div>,
+          },
+          {
+            path: 'chats/:chatId',
+            element: <ChatRoom />,
           },
         ],
       },

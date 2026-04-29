@@ -1,7 +1,18 @@
-import { ChatCard } from '@/features/chats/components';
+import { ChatCard, ChatCardSkeleton } from '@/features/chats/components';
+import { useInboxQuery } from '@/features/chats/hooks';
 
 export const ChatCardList = () => {
-  // Display a fixed list of 40 chat cards for now, until we have the backend set up
-  const chatCards = Array.from({ length: 40 }, (_, i) => <ChatCard key={i} />);
-  return <div className='flex flex-col gap-1'>{chatCards}</div>;
+  const { data, isLoading, isError } = useInboxQuery();
+
+  const loadingCards = Array.from({ length: 10 }, (_, i) => <ChatCardSkeleton key={i} />);
+
+  if (isError) {
+    return <div>Error loading inbox</div>;
+  }
+
+  return (
+    <div className='flex flex-col gap-1'>
+      {isLoading ? loadingCards : data?.map((inbox) => <ChatCard key={inbox.id} data={inbox} />)}
+    </div>
+  );
 };
