@@ -40,3 +40,15 @@ export interface Inbox {
 export interface WebSocketReceivePayload {
   message: ChatMessage;
 }
+
+export interface SimpleConversation {
+  id: number;
+  isGroup: boolean;
+  name: string;
+}
+
+export interface CreateConversationPayload {
+  participantIds: number[];
+  isGroup?: boolean;
+  name?: string;
+}

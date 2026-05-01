@@ -11,6 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
+import { MessageSquareDashed } from 'lucide-react';
 
 function formatMessageTime(dateString: string) {
   const date = new Date(dateString);
@@ -144,45 +145,55 @@ export const ChatRoom = () => {
             )}
           </div>
 
-          {allMessages.map((msg) => {
-            const isCurrentUser = currentUserQuery.data?.id === msg.sender.id;
+          {allMessages.length === 0 ? (
+            <div className='flex flex-col items-center justify-center flex-1 space-y-3 text-muted-foreground py-20'>
+              <MessageSquareDashed className='w-10 h-10 opacity-20' />
+              <div className='text-center'>
+                <p className='text-sm font-medium text-foreground/70'>No messages yet</p>
+                <p className='text-xs'>Send a message to start the conversation!</p>
+              </div>
+            </div>
+          ) : (
+            allMessages.map((msg) => {
+              const isCurrentUser = currentUserQuery.data?.id === msg.sender.id;
 
-            return (
-              <div
-                key={msg.id}
-                className={cn('flex flex-col', {
-                  'items-end': isCurrentUser,
-                  'items-start': !isCurrentUser,
-                })}
-              >
+              return (
                 <div
-                  className={cn('flex items-baseline gap-2 mb-1 px-1', {
-                    'flex-row-reverse': isCurrentUser, // Puts the time on the left of "You"
+                  key={msg.id}
+                  className={cn('flex flex-col', {
+                    'items-end': isCurrentUser,
+                    'items-start': !isCurrentUser,
                   })}
                 >
-                  <span className='text-xs font-medium text-muted-foreground'>
-                    {isCurrentUser ? 'You' : `${msg.sender.firstName} ${msg.sender.lastName}`}
-                  </span>
+                  <div
+                    className={cn('flex items-baseline gap-2 mb-1 px-1', {
+                      'flex-row-reverse': isCurrentUser, // Puts the time on the left of "You"
+                    })}
+                  >
+                    <span className='text-xs font-medium text-muted-foreground'>
+                      {isCurrentUser ? 'You' : `${msg.sender.firstName} ${msg.sender.lastName}`}
+                    </span>
 
-                  {/* The Timestamp */}
-                  <span className='text-[10px] text-muted-foreground/70'>
-                    {formatMessageTime(msg.createdAt)}
-                  </span>
+                    {/* The Timestamp */}
+                    <span className='text-[10px] text-muted-foreground/70'>
+                      {formatMessageTime(msg.createdAt)}
+                    </span>
+                  </div>
+                  <div
+                    className={cn(
+                      'p-3 rounded-2xl w-fit max-w-[85%] md:max-w-[75%] wrap-break-word',
+                      {
+                        'bg-primary text-primary-foreground rounded-tr-sm': isCurrentUser,
+                        'bg-muted text-foreground rounded-tl-sm': !isCurrentUser,
+                      },
+                    )}
+                  >
+                    <p className='text-sm'>{msg.text}</p>
+                  </div>
                 </div>
-                <div
-                  className={cn(
-                    'p-3 rounded-2xl w-fit max-w-[85%] md:max-w-[75%] wrap-break-word',
-                    {
-                      'bg-primary text-primary-foreground rounded-tr-sm': isCurrentUser,
-                      'bg-muted text-foreground rounded-tl-sm': !isCurrentUser,
-                    },
-                  )}
-                >
-                  <p className='text-sm'>{msg.text}</p>
-                </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
 
           {/* Scroll anchor */}
           <div ref={messageEndRef} />

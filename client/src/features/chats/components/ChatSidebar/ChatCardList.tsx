@@ -1,5 +1,6 @@
-import { ChatCard, ChatCardSkeleton } from '@/features/chats/components';
+import { ChatCard } from './ChatCard';
 import { useInboxQuery } from '@/features/chats/hooks';
+import { ChatCardSkeleton } from './ChatCardSkeleton';
 
 export const ChatCardList = () => {
   const { data, isLoading, isError } = useInboxQuery();
@@ -11,7 +12,7 @@ export const ChatCardList = () => {
   }
 
   return (
-    <div className='flex flex-col gap-1'>
+    <div className='flex-1 overflow-y-auto flex flex-col gap-1'>
       {isLoading ? loadingCards : data?.map((inbox) => <ChatCard key={inbox.id} data={inbox} />)}
     </div>
   );
