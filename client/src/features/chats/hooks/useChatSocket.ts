@@ -10,8 +10,8 @@ export const ReadyState = {
 
 export type ReadyStateValue = (typeof ReadyState)[keyof typeof ReadyState];
 
-export const useChatSocket = (url: string, initialMessages: ChatMessage[] = []) => {
-  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
+export const useChatSocket = (url: string) => {
+  const [liveMessages, setLiveMessages] = useState<ChatMessage[]>([]);
   const [readyState, setReadyState] = useState<ReadyStateValue>(ReadyState.CONNECTING);
 
   const socketRef = useRef<WebSocket | null>(null);
@@ -37,7 +37,7 @@ export const useChatSocket = (url: string, initialMessages: ChatMessage[] = []) 
         try {
           const data: WebSocketReceivePayload = JSON.parse(event.data);
           if (data.message) {
-            setMessages((prev) => [...prev, data.message]);
+            setLiveMessages((prev) => [...prev, data.message]);
           }
         } catch (error) {
           console.error('Failed to parse WebSocket message:', error);
@@ -88,7 +88,7 @@ export const useChatSocket = (url: string, initialMessages: ChatMessage[] = []) 
   }, []);
 
   return {
-    messages,
+    liveMessages,
     readyState,
     sendJsonMessage,
   };

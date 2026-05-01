@@ -21,10 +21,16 @@ export interface ChatMessage {
   createdAt: string;
 }
 
+export interface DisplayInfo {
+  name: string;
+  shortName: string;
+  avatar?: string;
+}
+
 export interface Inbox {
   id: number;
   isGroup: boolean;
-  displayName: string;
+  displayInfo: DisplayInfo;
   latestMessage?: Message;
   unreadCount: number;
   updatedAt: string;

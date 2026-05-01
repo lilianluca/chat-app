@@ -31,3 +31,13 @@ export interface ApiErrorResponse {
  * Represents an API error, extending the AxiosError with a typed response.
  */
 export type ApiError = AxiosError<ApiErrorResponse>;
+
+/**
+ * Represents a cursor paginated response.
+ * `next` and `previous` are URLs to the next/previous page, or null when unavailable.
+ */
+export interface PaginatedResponse<T> {
+  next: string | null;
+  previous: string | null;
+  results: T[];
+}

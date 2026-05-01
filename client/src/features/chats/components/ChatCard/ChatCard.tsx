@@ -17,10 +17,6 @@ const dateTimeFormatter = new Intl.DateTimeFormat('en-US', {
 });
 
 export const ChatCard = ({ data }: Props) => {
-  const senderInitials = data.latestMessage
-    ? `${data.latestMessage.sender.firstName[0]}${data.latestMessage.sender.lastName[0]}`
-    : 'NN';
-
   return (
     <NavLink
       to={`/chats/${data.latestMessage?.conversation}`}
@@ -34,14 +30,14 @@ export const ChatCard = ({ data }: Props) => {
       }
     >
       <Avatar size='lg'>
-        <AvatarImage src={data.latestMessage?.sender.avatar || ''} />
+        <AvatarImage src={data.displayInfo.avatar || ''} />
         <AvatarFallback className='bg-primary text-primary-foreground'>
-          {senderInitials}
+          {data.displayInfo.shortName}
         </AvatarFallback>
       </Avatar>
 
       <div className='flex-1'>
-        <h3 className='text-sm font-medium'>{data.displayName}</h3>
+        <h3 className='text-sm font-medium'>{data.displayInfo.name}</h3>
         <p className='text-sm text-muted-foreground'>{data.latestMessage?.text}</p>
       </div>
 
