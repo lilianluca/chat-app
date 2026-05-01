@@ -15,7 +15,7 @@ createRoot(document.getElementById('root')!).render(
 
       <Toaster position='top-right' />
 
-      <ReactQueryDevtools initialIsOpen={false} />
+      <ReactQueryDevtools initialIsOpen={false} buttonPosition='top-right' />
     </QueryClientProvider>
   </StrictMode>,
 );

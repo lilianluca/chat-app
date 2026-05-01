@@ -1,10 +1,16 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type SyntheticEvent } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { useParams } from 'react-router';
 import { useChatSocket, ReadyState } from '../../hooks/useChatSocket';
 import { useMe } from '@/features/users/hooks';
 import { cn } from '@/utils';
 import { useMessagesQuery } from '@/features/chats/hooks';
 import { useInView } from 'react-intersection-observer';
+import { Controller, useForm } from 'react-hook-form';
+import { messageSchema, type MessagePayload } from '@/features/chats/schemas';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { FieldGroup } from '@/components/ui/field';
 
 function formatMessageTime(dateString: string) {
   const date = new Date(dateString);
@@ -21,17 +27,15 @@ export const ChatRoom = () => {
 
   const currentUserQuery = useMe();
 
-  const [newMessage, setNewMessage] = useState('');
   // Track scroll height for the anti-jump trick
   const scrollHeightSnap = useRef<number>(0);
   const isInitialMount = useRef(true);
+  const messageEndRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const { ref: topBoundaryRef, inView } = useInView({
     threshold: 0,
   });
-
-  const messageEndRef = useRef<HTMLDivElement>(null);
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const {
     data: paginatedMessages,
@@ -49,7 +53,18 @@ export const ChatRoom = () => {
   }, [paginatedMessages]);
 
   const { liveMessages, sendJsonMessage, readyState } = useChatSocket(socketurl);
-  useEffect(() => console.log('Live messages:', liveMessages), [liveMessages]);
+
+  const { control, handleSubmit, reset } = useForm<MessagePayload>({
+    resolver: zodResolver(messageSchema),
+    defaultValues: {
+      text: '',
+    },
+  });
+
+  function onSubmit(data: MessagePayload) {
+    sendJsonMessage(data);
+    reset();
+  }
 
   // Separate streams, merged for render
   const allMessages = [...historyMessages, ...liveMessages];
@@ -60,15 +75,6 @@ export const ChatRoom = () => {
     [ReadyState.CLOSING]: 'Disconnecting...',
     [ReadyState.CLOSED]: 'Offline',
   }[readyState];
-
-  function handleSendMessage(e: SyntheticEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    if (newMessage.trim() === '') return;
-
-    sendJsonMessage({ text: newMessage });
-    setNewMessage('');
-  }
 
   function scrollToBottom(behavior: ScrollBehavior = 'smooth') {
     if (messageEndRef.current) {
@@ -183,22 +189,26 @@ export const ChatRoom = () => {
         </div>
       </div>
 
-      <form onSubmit={handleSendMessage} className='p-2 md:p-4 border-t flex gap-2 bg-background'>
-        <input
-          type='text'
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          className='flex-1 px-3 py-2 border rounded-md'
-          placeholder='Type a message...'
-          disabled={readyState !== ReadyState.OPEN}
-        />
-        <button
-          type='submit'
-          disabled={readyState !== ReadyState.OPEN}
-          className='px-4 py-2 bg-primary text-primary-foreground rounded-md disabled:opacity-50'
-        >
-          Send
-        </button>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FieldGroup className='flex flex-row gap-2 w-full items-center p-2'>
+          <Controller
+            name='text'
+            control={control}
+            rules={{ required: true }}
+            render={({ field: fieldState }) => (
+              <Input
+                type='text'
+                value={fieldState.value}
+                onChange={fieldState.onChange}
+                placeholder='Type a message...'
+                disabled={readyState !== ReadyState.OPEN}
+              />
+            )}
+          />
+          <Button type='submit' disabled={readyState !== ReadyState.OPEN}>
+            Send
+          </Button>
+        </FieldGroup>
       </form>
     </div>
   );
