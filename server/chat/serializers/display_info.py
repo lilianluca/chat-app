@@ -6,4 +6,5 @@ class DisplayInfoSerializer(serializers.Serializer):
 
     name = serializers.CharField()
     short_name = serializers.CharField()
+    status_emoji = serializers.CharField()
     avatar = serializers.URLField()

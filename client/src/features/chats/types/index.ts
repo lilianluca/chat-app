@@ -24,6 +24,7 @@ export interface ChatMessage {
 export interface DisplayInfo {
   name: string;
   shortName: string;
+  statusEmoji: string;
   avatar?: string;
 }
 

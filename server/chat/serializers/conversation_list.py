@@ -30,6 +30,7 @@ class ConversationListSerializer(serializers.ModelSerializer):
         raw_data = {
             "name": "Empty Chat",
             "short_name": "EC",
+            "status_emoji": "",
             "avatar": None,
         }
 
@@ -38,6 +39,7 @@ class ConversationListSerializer(serializers.ModelSerializer):
             raw_data = {
                 "name": obj.name or "Unnamed Group",
                 "short_name": obj.name[:2].upper() if obj.name else "UG",
+                "status_emoji": "",
                 "avatar": None,  # TODO: We can add group avatars later!
             }
         elif request and request.user.is_authenticated:
@@ -50,11 +52,17 @@ class ConversationListSerializer(serializers.ModelSerializer):
                 if getattr(other_user, "avatar", None):
                     avatar_url = request.build_absolute_uri(other_user.avatar.url)
 
+                short_name = (
+                    f"{other_user.first_name[0]}{other_user.last_name[0]}".upper()
+                    if other_user.first_name and other_user.last_name
+                    else "DM"
+                )
+                status_emoji = other_user.status_emoji
+
                 raw_data = {
                     "name": f"{other_user.first_name} {other_user.last_name}".strip(),
-                    "short_name": f"{other_user.first_name[0]}{other_user.last_name[0]}".upper()
-                    if other_user.first_name and other_user.last_name
-                    else "DM",
+                    "short_name": short_name,
+                    "status_emoji": status_emoji,
                     "avatar": avatar_url,
                 }
 
@@ -70,4 +78,4 @@ class ConversationListSerializer(serializers.ModelSerializer):
     def get_unread_count(self, obj):
         """Calculate the number of unread messages for the current user."""
         # TODO: Placeholder for now, we will add the logic to compare `last_read_at` later!
-        return 0
+        return 1

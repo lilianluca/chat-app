@@ -37,18 +37,21 @@ export const ChatCard = ({ data }: Props) => {
       </Avatar>
 
       <div className='flex-1'>
-        <h3 className='text-sm font-medium'>{data.displayInfo.name}</h3>
+        <div className='flex items-center gap-1'>
+          <h3 className='text-sm font-medium'>{data.displayInfo.name}</h3>
+          <p>{data.displayInfo.statusEmoji}</p>
+        </div>
         <p className='text-sm text-muted-foreground'>{data.latestMessage?.text}</p>
       </div>
 
-      <div className='flex flex-col gap-1'>
+      <div className='flex flex-col justify-between items-end gap-1'>
         <p className='text-sm text-muted-foreground'>
           {data.latestMessage
             ? dateTimeFormatter.format(new Date(data.latestMessage.createdAt))
             : ''}
         </p>
         {data.unreadCount > 0 && (
-          <div className='bg-primary text-white text-xs font-medium px-2 py-1 rounded-full'>
+          <div className='bg-primary text-background text-xs font-medium size-6 flex items-center justify-center rounded-full'>
             {data.unreadCount}
           </div>
         )}
