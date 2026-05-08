@@ -16,6 +16,7 @@ export interface Message {
 
 export interface ChatMessage {
   id: number;
+  conversation: number;
   text: string;
   sender: ChatUser;
   createdAt: string;

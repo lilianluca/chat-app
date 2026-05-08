@@ -10,14 +10,17 @@ export const ReadyState = {
 
 export type ReadyStateValue = (typeof ReadyState)[keyof typeof ReadyState];
 
-export const useChatSocket = (url: string) => {
+export const useChatSocket = (url: string, conversationId?: number) => {
   const [liveMessages, setLiveMessages] = useState<ChatMessage[]>([]);
   const [readyState, setReadyState] = useState<ReadyStateValue>(ReadyState.CONNECTING);
 
   const socketRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hasClearedForUrlRef = useRef(false);
 
   useEffect(() => {
+    hasClearedForUrlRef.current = false;
+
     function connect() {
       const ws = new WebSocket(url);
       socketRef.current = ws;
@@ -26,6 +29,11 @@ export const useChatSocket = (url: string) => {
       ws.onopen = () => {
         console.log('✅ WebSocket Connected');
         setReadyState(ReadyState.OPEN);
+
+        if (!hasClearedForUrlRef.current) {
+          hasClearedForUrlRef.current = true;
+          setLiveMessages([]);
+        }
 
         // Clear any pending reconnect timers if we successfully connect
         if (reconnectTimeoutRef.current) {
@@ -37,7 +45,9 @@ export const useChatSocket = (url: string) => {
         try {
           const data: WebSocketReceivePayload = JSON.parse(event.data);
           if (data.message) {
-            setLiveMessages((prev) => [...prev, data.message]);
+            if (conversationId === undefined || data.message.conversation === conversationId) {
+              setLiveMessages((prev) => [...prev, data.message]);
+            }
           }
         } catch (error) {
           console.error('Failed to parse WebSocket message:', error);
@@ -76,7 +86,7 @@ export const useChatSocket = (url: string) => {
         socketRef.current.close();
       }
     };
-  }, [url]);
+  }, [url, conversationId]);
 
   // Helper function to send messages
   const sendJsonMessage = useCallback((payload: object) => {

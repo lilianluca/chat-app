@@ -53,7 +53,7 @@ export const ChatRoom = () => {
     return paginatedMessages.pages.flatMap((page) => page.results).reverse();
   }, [paginatedMessages]);
 
-  const { liveMessages, sendJsonMessage, readyState } = useChatSocket(socketurl);
+  const { liveMessages, sendJsonMessage, readyState } = useChatSocket(socketurl, Number(chatId));
 
   const { control, handleSubmit, reset } = useForm<MessagePayload>({
     resolver: zodResolver(messageSchema),
