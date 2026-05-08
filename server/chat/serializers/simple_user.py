@@ -1,5 +1,3 @@
-"""Serializer for basic user information in chat context."""
-
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
@@ -11,4 +9,4 @@ class SimpleUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ("id", "username", "email", "first_name", "last_name", "avatar")
+        fields = ("id", "email", "first_name", "last_name", "avatar")

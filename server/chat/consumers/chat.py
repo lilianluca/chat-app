@@ -5,8 +5,10 @@ import json
 from channels.db import database_sync_to_async
 from channels.generic.websocket import AsyncWebsocketConsumer
 from django.contrib.auth import get_user_model
+from djangorestframework_camel_case.util import camelize
 
 from chat.models import Conversation, Message, Participant
+from chat.serializers import MessageSerializer
 
 User = get_user_model()
 
@@ -57,17 +59,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             {
                 "type": "chat_message",  # This calls the method below
-                "message": {
-                    "id": new_message.id,
-                    "text": new_message.text,
-                    "created_at": new_message.created_at.isoformat(),
-                    "sender": {
-                        "id": self.user.id,
-                        "first_name": self.user.first_name,
-                        "last_name": self.user.last_name,
-                        # Add avatar URL here if needed
-                    },
-                },
+                "message": new_message,
             },
         )
 
@@ -89,4 +81,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def save_message(self, user, conversation_id, text):
         """Save the message to the database."""
         conversation = Conversation.objects.get(id=conversation_id)
-        return Message.objects.create(sender=user, conversation=conversation, text=text)
+        new_message = Message.objects.create(
+            sender=user, conversation=conversation, text=text
+        )
+        serializer = MessageSerializer(new_message)
+        camel_data = camelize(serializer.data)
+        return camel_data

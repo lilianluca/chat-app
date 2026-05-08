@@ -57,6 +57,9 @@ ignore = [
     "D101", # Ignore missing docstring in public class
     "D105", # Ignore missing docstring in magic methods
 ]
+"**/serializers/*.py" = [
+    "D100", # Ignore missing docstring in public module
+]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"

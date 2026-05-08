@@ -1,0 +1,101 @@
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Loader, LogOut, Menu, MessageCircle, Search, User } from 'lucide-react';
+import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
+import { Link } from 'react-router';
+import { useLogoutMutation } from '@/features/auth/hooks';
+import { toast } from 'sonner';
+
+interface Props {
+  setProfileSheetOpen: (open: boolean) => void;
+  search: string;
+  setSearch: (value: string) => void;
+}
+
+export const Header = ({ setProfileSheetOpen, search, setSearch }: Props) => {
+  const logoutMutation = useLogoutMutation();
+
+  function handleLogout(e: Event) {
+    e.preventDefault();
+    logoutMutation.mutate(undefined, {
+      onSuccess: () => {
+        toast.success('Logged out successfully');
+      },
+    });
+  }
+
+  function handleDropdownClose(e: Event) {
+    // If we are currently logging out, don't let clicking away close the menu
+    if (logoutMutation.isPending) {
+      e.preventDefault();
+    }
+  }
+
+  function handleOpenProfileSheet() {
+    setProfileSheetOpen(true);
+  }
+
+  return (
+    <div className='flex flex-col gap-2 sm:flex-row'>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant='outline' className='w-full sm:w-auto'>
+            <Menu />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent
+          onInteractOutside={handleDropdownClose}
+          onEscapeKeyDown={handleDropdownClose}
+          className='w-(--radix-dropdown-menu-trigger-width) min-w-0 sm:w-40 sm:min-w-32 **:data-[slot=dropdown-menu-item]:w-full'
+          align='start'
+        >
+          <DropdownMenuGroup>
+            <DropdownMenuItem asChild>
+              <Link to='/chats'>
+                <MessageCircle />
+                <span>Chats</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem onSelect={handleOpenProfileSheet}>
+              <User />
+              <span>Profile</span>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+
+          <DropdownMenuSeparator />
+
+          <DropdownMenuGroup>
+            <DropdownMenuItem
+              variant='destructive'
+              disabled={logoutMutation.isPending}
+              onSelect={handleLogout}
+            >
+              {logoutMutation.isPending ? <Loader className='animate-spin' /> : <LogOut />}
+              <span>{logoutMutation.isPending ? 'Logging out...' : 'Logout'}</span>
+            </DropdownMenuItem>
+          </DropdownMenuGroup>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <InputGroup className='w-full'>
+        <InputGroupInput
+          placeholder='Search...'
+          name='search'
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+        <InputGroupAddon>
+          <Search />
+        </InputGroupAddon>
+        {/* <InputGroupAddon align='inline-end'>12 results</InputGroupAddon> */}
+      </InputGroup>
+    </div>
+  );
+};

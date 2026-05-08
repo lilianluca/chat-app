@@ -7,7 +7,7 @@
 
 @theme {
   /* Semantic UI Colors */
-  --color-brand: #355070;
+  --color-brand: oklch(42.434% 0.06292 253.376);
   --color-destructive: #e56b6f;
 
   /* Twine palette */
@@ -67,7 +67,7 @@
   --card-foreground: oklch(0.148 0.004 228.8);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.148 0.004 228.8);
-  --primary: oklch(0.218 0.008 223.9);
+  --primary: oklch(42.434% 0.06292 253.376);
   --primary-foreground: oklch(0.987 0.002 197.1);
   --secondary: oklch(0.963 0.002 197.1);
   --secondary-foreground: oklch(0.218 0.008 223.9);

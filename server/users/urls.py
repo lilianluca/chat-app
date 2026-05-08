@@ -7,4 +7,5 @@ from users import apis
 urlpatterns = [
     path("", apis.UserRegistrationApiView.as_view(), name="register_user"),
     path("me/", apis.UserProfileApiView.as_view(), name="my_profile"),
+    path("search/", apis.UserSearchApiView.as_view(), name="search_users"),
 ]

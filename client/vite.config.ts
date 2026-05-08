@@ -16,8 +16,11 @@ export default defineConfig({
     proxy: {
       '/api': {
         target: 'http://web:8000',
-        changeOrigin: true,
-        secure: false,
+        changeOrigin: false,
+      },
+      '/media': {
+        target: 'http://web:8000',
+        changeOrigin: false,
       },
     },
   },
