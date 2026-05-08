@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Bell, Loader, LogOut, Menu, MessageCircle, Search, User } from 'lucide-react';
+import { Loader, LogOut, Menu, MessageCircle, Search, User } from 'lucide-react';
 import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
 import { Link } from 'react-router';
 import { useLogoutMutation } from '@/features/auth/hooks';
@@ -66,10 +66,6 @@ export const Header = ({ setProfileSheetOpen, search, setSearch }: Props) => {
             <DropdownMenuItem onSelect={handleOpenProfileSheet}>
               <User />
               <span>Profile</span>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Bell />
-              <span>Notifications</span>
             </DropdownMenuItem>
           </DropdownMenuGroup>
 
