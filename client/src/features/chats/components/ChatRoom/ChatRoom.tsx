@@ -24,7 +24,18 @@ function formatMessageTime(dateString: string) {
 
 export const ChatRoom = () => {
   const { chatId } = useParams();
-  const socketurl = `ws://localhost:8000/ws/chat/${chatId}/`;
+
+  // Check if we are using HTTPS or HTTP to determine WSS or WS
+  const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+
+  // Get the current domain and port
+  const host = window.location.host;
+
+  // Fallback to an environment variable for local development ONLY
+  const WS_BASE_URL = import.meta.env.VITE_WS_URL || `${wsProtocol}//${host}`;
+
+  // 4. Construct the final URL
+  const socketurl = `${WS_BASE_URL}/ws/chat/${chatId}/`;
 
   const currentUserQuery = useMe();
 
