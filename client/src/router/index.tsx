@@ -15,7 +15,11 @@ export const router = createBrowserRouter([
         children: [
           {
             path: 'chats',
-            element: <div className='text-2xl font-bold h-full p-2'>Chats Page</div>,
+            element: (
+              <div className='text-xl text-center h-full p-2 flex items-center justify-center text-muted-foreground'>
+                Select a Chat
+              </div>
+            ),
           },
           {
             path: 'chats/:chatId',
