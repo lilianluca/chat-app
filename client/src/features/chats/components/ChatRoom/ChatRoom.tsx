@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react';
-import { useParams } from 'react-router';
+import { Link, useParams } from 'react-router';
 import { useChatSocket, ReadyState } from '../../hooks/useChatSocket';
 import { useMe } from '@/features/users/hooks';
 import { cn } from '@/utils';
@@ -11,7 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
-import { MessageSquareDashed } from 'lucide-react';
+import { ArrowLeft, Loader, MessageSquareDashed } from 'lucide-react';
 
 function formatMessageTime(dateString: string) {
   const date = new Date(dateString);
@@ -124,13 +124,25 @@ export const ChatRoom = () => {
     }
   }, [liveMessages]);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div className='h-full w-full flex items-center justify-center'>
+        <Loader className='animate-spin' />
+      </div>
+    );
   if (isError) return <div>Error loading messages.</div>;
 
   return (
     <div className='flex flex-col h-full border rounded-lg'>
       <div className='flex items-center justify-between p-2 border-b bg-muted/50'>
-        <h2 className='font-semibold'>Chat Room {chatId}</h2>
+        <div className='flex items-center gap-2'>
+          <Button asChild variant='ghost' size='icon' className='md:hidden'>
+            <Link to='/chats' aria-label='Back to chats'>
+              <ArrowLeft />
+            </Link>
+          </Button>
+          <h2 className='font-semibold'>Chat Room {chatId}</h2>
+        </div>
         <span className='text-xs text-muted-foreground'>Status: {connectionStatus}</span>
       </div>
 

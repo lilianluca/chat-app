@@ -43,17 +43,17 @@ export const Header = ({ setProfileSheetOpen, search, setSearch }: Props) => {
   }
 
   return (
-    <div className='flex gap-2'>
+    <div className='flex flex-col gap-2 sm:flex-row'>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant='outline'>
+          <Button variant='outline' className='w-full sm:w-auto'>
             <Menu />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
           onInteractOutside={handleDropdownClose}
           onEscapeKeyDown={handleDropdownClose}
-          className='w-40'
+          className='w-(--radix-dropdown-menu-trigger-width) min-w-0 sm:w-40 sm:min-w-32 **:data-[slot=dropdown-menu-item]:w-full'
           align='start'
         >
           <DropdownMenuGroup>
@@ -88,7 +88,7 @@ export const Header = ({ setProfileSheetOpen, search, setSearch }: Props) => {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <InputGroup>
+      <InputGroup className='w-full'>
         <InputGroupInput
           placeholder='Search...'
           name='search'
