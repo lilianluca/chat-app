@@ -14,7 +14,8 @@ export const useCreateConversationMutation = () => {
 
   return useMutation<SimpleConversation, ApiError, CreateConversationPayload>({
     mutationFn: createConversation,
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log('Conversation created:', data);
       queryClient.invalidateQueries({ queryKey: ['inbox'] });
       toast.success('Group chat created successfully');
     },

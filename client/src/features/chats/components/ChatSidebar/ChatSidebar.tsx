@@ -7,12 +7,13 @@ import { Header } from './Header';
 
 export const ChatSidebar = () => {
   const [isProfileSheetOpen, setProfileSheetOpen] = useState(false);
+  const [search, setSearch] = useState('');
 
   return (
     <div className='h-screen overflow-hidden flex'>
       <div className='h-full w-80 md:w-96 flex flex-col gap-2 p-2 border-r'>
-        <Header setProfileSheetOpen={setProfileSheetOpen} />
-        <ChatCardList />
+        <Header setProfileSheetOpen={setProfileSheetOpen} search={search} setSearch={setSearch} />
+        <ChatCardList search={search} />
         <NewChatDialog />
       </div>
 

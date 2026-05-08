@@ -45,7 +45,7 @@ export const NewChatDialog = () => {
           </div>
 
           <TabsContent value='dm'>
-            <CreateDirectMessage />
+            <CreateDirectMessage onSuccess={handleSuccess} />
           </TabsContent>
           <TabsContent value='group'>
             <CreateGroupChat onSuccess={handleSuccess} />

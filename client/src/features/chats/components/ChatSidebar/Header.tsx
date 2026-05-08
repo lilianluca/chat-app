@@ -15,9 +15,11 @@ import { toast } from 'sonner';
 
 interface Props {
   setProfileSheetOpen: (open: boolean) => void;
+  search: string;
+  setSearch: (value: string) => void;
 }
 
-export const Header = ({ setProfileSheetOpen }: Props) => {
+export const Header = ({ setProfileSheetOpen, search, setSearch }: Props) => {
   const logoutMutation = useLogoutMutation();
 
   function handleLogout(e: Event) {
@@ -87,11 +89,16 @@ export const Header = ({ setProfileSheetOpen }: Props) => {
       </DropdownMenu>
 
       <InputGroup>
-        <InputGroupInput placeholder='Search...' name='search' />
+        <InputGroupInput
+          placeholder='Search...'
+          name='search'
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
         <InputGroupAddon>
           <Search />
         </InputGroupAddon>
-        <InputGroupAddon align='inline-end'>12 results</InputGroupAddon>
+        {/* <InputGroupAddon align='inline-end'>12 results</InputGroupAddon> */}
       </InputGroup>
     </div>
   );

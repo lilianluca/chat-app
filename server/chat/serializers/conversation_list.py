@@ -78,4 +78,4 @@ class ConversationListSerializer(serializers.ModelSerializer):
     def get_unread_count(self, obj):
         """Calculate the number of unread messages for the current user."""
         # TODO: Placeholder for now, we will add the logic to compare `last_read_at` later!
-        return 1
+        return 0

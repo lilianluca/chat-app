@@ -1,9 +1,27 @@
 import { ChatCard } from './ChatCard';
 import { useInboxQuery } from '@/features/chats/hooks';
 import { ChatCardSkeleton } from './ChatCardSkeleton';
+import { useMemo } from 'react';
 
-export const ChatCardList = () => {
+interface Props {
+  search: string;
+}
+
+export const ChatCardList = ({ search }: Props) => {
   const { data, isLoading, isError } = useInboxQuery();
+
+  const filteredInbox = useMemo(() => {
+    // If no data, or search is empty, return all inbox items
+    if (!data) return [];
+    if (!search.trim()) return data;
+
+    const lowerSearch = search.toLowerCase();
+
+    return data.filter((inbox) => {
+      const matchesName = inbox.displayInfo.name.toLowerCase().includes(lowerSearch);
+      return matchesName;
+    });
+  }, [data, search]);
 
   const loadingCards = Array.from({ length: 10 }, (_, i) => <ChatCardSkeleton key={i} />);
 
@@ -13,7 +31,15 @@ export const ChatCardList = () => {
 
   return (
     <div className='flex-1 overflow-y-auto flex flex-col gap-1'>
-      {isLoading ? loadingCards : data?.map((inbox) => <ChatCard key={inbox.id} data={inbox} />)}
+      {isLoading
+        ? loadingCards
+        : filteredInbox.map((inbox) => <ChatCard key={inbox.id} data={inbox} />)}
+
+      {!isLoading && filteredInbox.length === 0 && (
+        <div className='p-4 text-center text-sm text-muted-foreground'>
+          No chats found for &quot;{search}&quot;
+        </div>
+      )}
     </div>
   );
 };
