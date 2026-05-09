@@ -4,6 +4,7 @@ import { useChatSocket, ReadyState } from '../../hooks/useChatSocket';
 import { useMe } from '@/features/users/hooks';
 import { cn } from '@/utils';
 import { useMessagesQuery } from '@/features/chats/hooks';
+import { useQueryClient, type InfiniteData } from '@tanstack/react-query';
 import { useInView } from 'react-intersection-observer';
 import { Controller, useForm } from 'react-hook-form';
 import { messageSchema, type MessagePayload } from '@/features/chats/schemas';
@@ -12,6 +13,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
 import { ArrowLeft, Loader, MessageSquareDashed } from 'lucide-react';
+import type { Message } from '@/features/chats/types';
+import type { PaginatedResponse } from '@/types';
 
 function formatMessageTime(dateString: string) {
   const date = new Date(dateString);
@@ -65,6 +68,7 @@ export const ChatRoom = () => {
   }, [paginatedMessages]);
 
   const { liveMessages, sendJsonMessage, readyState } = useChatSocket(socketurl, Number(chatId));
+  const queryClient = useQueryClient();
 
   const { control, handleSubmit, reset } = useForm<MessagePayload>({
     resolver: zodResolver(messageSchema),
@@ -78,8 +82,16 @@ export const ChatRoom = () => {
     reset();
   }
 
-  // Separate streams, merged for render
-  const allMessages = [...historyMessages, ...liveMessages];
+  // Merge both sources while keeping a single entry per message id.
+  const allMessages = useMemo(() => {
+    const messagesById = new Map<number, Message>();
+
+    [...historyMessages, ...liveMessages].forEach((message) => {
+      messagesById.set(message.id, message);
+    });
+
+    return Array.from(messagesById.values());
+  }, [historyMessages, liveMessages]);
 
   const connectionStatus = {
     [ReadyState.CONNECTING]: 'Connecting...',
@@ -134,6 +146,42 @@ export const ChatRoom = () => {
       scrollToBottom('smooth');
     }
   }, [liveMessages]);
+
+  // Persist live messages into the React Query cache so they survive
+  // unmount/remount (e.g., when navigating away and back).
+  useEffect(() => {
+    if (!chatId || liveMessages.length === 0) return;
+
+    const convKey = ['conversations', Number(chatId), 'messages'] as const;
+
+    liveMessages.forEach((msg) => {
+      queryClient.setQueryData<InfiniteData<PaginatedResponse<Message>>>(convKey, (oldData) => {
+        if (!oldData) {
+          // Create a minimal paginated shape if none exists
+          return {
+            pages: [{ results: [msg], next: null, previous: null }],
+            pageParams: [undefined],
+          };
+        }
+
+        // Avoid duplicates if the message is already in cache
+        const alreadyExists = oldData.pages.some((page) =>
+          page.results.some((cachedMessage) => cachedMessage.id === msg.id),
+        );
+        if (alreadyExists) return oldData;
+
+        // Insert the live message into the first page's results (server returns newest-first)
+        const newPages = oldData.pages.map((page, idx) => {
+          if (idx === 0) {
+            return { ...page, results: [msg, ...page.results] };
+          }
+          return page;
+        });
+
+        return { ...oldData, pages: newPages };
+      });
+    });
+  }, [liveMessages, chatId, queryClient]);
 
   if (isLoading)
     return (
